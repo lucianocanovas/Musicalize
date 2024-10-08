@@ -1,6 +1,6 @@
 # Music Player
 
-This project is a Music Player developed as a final project for university. The application allows users to log in, register, and play songs. It is designed with future upgrades in mind, aiming to enhance its features and functionality over time.
+This project is a Console Music Player developed as a final project for university. The application allows users to log in, register, and play songs. It is designed with future upgrades in mind, aiming to enhance its features and functionality over time.
 
 ## Features
 
@@ -10,7 +10,7 @@ This project is a Music Player developed as a final project for university. The 
 
 ## Future Upgrades
 
-- Enhanced user interface
+- Enhanced user interface (add front-end)
 - Playlist management
 - Song search functionality
 - Integration with online music libraries
