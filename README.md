@@ -1,3 +1,6 @@
+> [!WARNING]  
+> WORK IN PROGRESS
+
 # Music Player
 
 This project is a Console Music Player developed as a final project for university. The application allows users to log in, register, and play songs. It is designed with future upgrades in mind, aiming to enhance its features and functionality over time.
