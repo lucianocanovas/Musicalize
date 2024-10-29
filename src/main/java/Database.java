@@ -1,6 +1,8 @@
 import java.sql.*;
 
 public class Database {
+
+    // METODO PARA CONECTAR A LA BASE DE DATOS
     public static Connection connect() {
         String url = "jdbc:sqlite:src/main/resources/Musicalize.db";
         Connection connection = null;
@@ -13,10 +15,7 @@ public class Database {
         }
     }
 
-    public static void search() {
-
-    }
-
+    // METODO PARA CERRAR LA CONEXIÓN A LA BASE DE DATOS
     public static void close(Connection connection) {
         try {
             connection.close();
@@ -24,4 +23,5 @@ public class Database {
             System.out.println("║ [!] DATABASE CONNECTION ERROR: " + e.getMessage());
         }
     }
+
 }

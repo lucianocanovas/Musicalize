@@ -1,5 +1,7 @@
-import java.sql.*;
-import java.util.InputMismatchException;
+// PROYECTO INTEGRADOR PROGRAMACIÓN II
+// INTEGRANTES: LUCIANO CANOVAS - LUCIANO SUAREZ
+// REPRODUCTOR DE MUSICA
+
 import java.util.Scanner;
 
 public class Main {

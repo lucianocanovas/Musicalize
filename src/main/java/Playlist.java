@@ -15,6 +15,7 @@ public class Playlist {
         this.list = new ArrayList<Media>();
     }
 
+    // METODO PARA LISTAR PLAYLISTS
     public static void list(int id) {
         Connection connection = Database.connect();
         String query = "SELECT * FROM Playlists WHERE userID = ?";
@@ -24,7 +25,7 @@ public class Playlist {
             ResultSet result = statement.executeQuery();
             System.out.println("║ PLAYLISTS");
             while (result.next()) {
-                System.out.println("║ ["+ result.getString("id") +"] " + result.getString("name"));
+                System.out.println("║ [" + result.getString("id") + "] " + result.getString("name"));
             }
             Database.close(connection);
         } catch (SQLException e) {
@@ -32,6 +33,7 @@ public class Playlist {
         }
     }
 
+    // METODO PARA LISTAR LAS CANCIONES Y PODCASTS DE UNA PLAYLIST
     public void listMedia() {
         Connection connection = Database.connect();
         String query = "SELECT mediaID FROM PlaylistMedia WHERE playlistID = ?";
@@ -45,7 +47,7 @@ public class Playlist {
                 statement.setInt(1, result.getInt("mediaID"));
                 ResultSet mediaResult = statement.executeQuery();
                 while (mediaResult.next()) {
-                    System.out.println("║ ["+ mediaResult.getInt("id") +"] " + mediaResult.getString("name"));
+                    System.out.println("║ [" + mediaResult.getInt("id") + "] " + mediaResult.getString("name"));
                 }
             }
             Database.close(connection);
@@ -54,6 +56,7 @@ public class Playlist {
         }
     }
 
+    // METODO PARA VER UNA PLAYLIST
     public void view() {
         Scanner input = new Scanner(System.in);
         System.out.println("║ PLAYLIST: " + this.name);
@@ -93,6 +96,7 @@ public class Playlist {
         }
     }
 
+    // METODO PARA REPRODUCIR UNA PLAYLIST
     public void play(int id) {
         Connection connection = Database.connect();
         String query = "SELECT mediaID FROM PlaylistMedia WHERE playlistID = ?";
@@ -125,6 +129,7 @@ public class Playlist {
         }
     }
 
+    // METODO PARA AGREGAR UNA CANCION O PODCAST A UNA PLAYLIST
     public void add(int id, int mediaID) {
         Connection connection = Database.connect();
         String query = "INSERT INTO PlaylistMedia (playlistID, mediaID) VALUES (?, ?)";
@@ -139,6 +144,7 @@ public class Playlist {
         }
     }
 
+    // METODO PARA ELIMINAR UNA CANCION O PODCAST DE UNA PLAYLIST
     public void remove(int id, int mediaID) {
         Connection connection = Database.connect();
         String query = "DELETE FROM PlaylistMedia WHERE playlistID = ? AND mediaID = ?";

@@ -40,6 +40,7 @@ public class Media {
         }
     }
 
+    // METODO PARA REPRODUCIR MEDIOS
     public void play() {
         Scanner input = new Scanner(System.in);
         mediaThread = new Thread(() -> {
@@ -59,6 +60,7 @@ public class Media {
         stop();
     }
 
+    // METODO PARA DETENER REPRODUCCION
     public void stop() {
         if (player != null) {
             player.close();

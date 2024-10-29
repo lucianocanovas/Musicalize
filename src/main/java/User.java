@@ -9,6 +9,7 @@ public class User {
     protected String password;
     protected String type;
 
+    // CONSTRUCTOR
     public User(int id, String username, String password) {
         this.id = id;
         this.username = username;

@@ -13,6 +13,7 @@ public class Album {
         this.author = author;
     }
 
+    // METODO PARA LISTAR ALBUMES
     public static void list(String author) {
         Connection connection = Database.connect();
         String query = "SELECT * FROM Album WHERE author = ?";
@@ -41,6 +42,7 @@ public class Album {
         }
     }
 
+    // METODO PARA REPRODUCIR UN ALBUM
     public void play () {
         Scanner input = new Scanner(System.in);
         Connection connection = Database.connect();

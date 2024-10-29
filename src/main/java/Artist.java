@@ -7,5 +7,4 @@ public class Artist extends User {
         this.type = "artist";
     }
 
-
 }
