@@ -293,7 +293,7 @@ public class User {
 
     // MENÚ DE LISTAS DE REPRODUCCIÓN
     public void playlistMenu() {
-        Playlist playlist = new Playlist("║ PLAYLIST DE " + this.username.toUpperCase(), this.id);
+        Playlist playlist = new Playlist("PLAYLIST DE " + this.username.toUpperCase(), this.id);
         Scanner input = new Scanner(System.in);
         playlist.listMedia();
         System.out.println("╠═ [~] PLAY");

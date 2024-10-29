@@ -62,7 +62,7 @@ public class Playlist {
                 }
             }
             Database.close(connection);
-            System.out.println(this.name);
+            System.out.println("║ PLAYING " + this.name);
             for (Media media : list) {
                 media.play();
             }
