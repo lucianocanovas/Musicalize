@@ -64,14 +64,8 @@ public class User {
         Scanner input = new Scanner(System.in);
         System.out.print("║ [↪] USERNAME ⇒ ");
         String username = input.nextLine();
-        String password;
-        String confirm;
-        do {
-            System.out.print("║ [↪] PASSWORD ⇒ ");
-            password = input.nextLine();
-            System.out.print("║ [↪] CONFIRM PASSWORD ⇒ ");
-            confirm = input.nextLine();
-        } while (!password.equals(confirm) && password.length() < 1);
+        System.out.print("║ [↪] PASSWORD ⇒ ");
+        String password = input.nextLine();
         System.out.println("║ [◎] ACCOUNT TYPES: USER | MUSICIAN | HOST");
         System.out.print("║ [↪] ACCOUNT TYPE ⇒ ");
         String type = input.nextLine();
@@ -104,7 +98,7 @@ public class User {
         System.out.println("╠═ [~] PROFILE");
         System.out.println("╠═ [~] MEDIA");
         System.out.println("╠═ [~] ALBUMS");
-        System.out.println("╠═ [~] PLAYLISTS");
+        System.out.println("╠═ [~] PLAYLIST");
         System.out.println("╠═ [~] LOGOUT");
         System.out.print("║ [#] ⇒ ");
         String command = input.nextLine().toLowerCase();
@@ -118,7 +112,7 @@ public class User {
             case "albums":
                 albumMenu();
                 break;
-            case "playlists":
+            case "playlist":
                 playlistMenu();
                 break;
             case "logout":
@@ -190,18 +184,20 @@ public class User {
         switch (command) {
             case "play":
                 System.out.print("║ [↪] ID ⇒ ");
+                int mediaID = 0;
                 try {
-                    int id = input.nextInt();
+                    mediaID = input.nextInt();
                 } catch (InputMismatchException e) {
                     System.out.println("║ [!] INVALID ID");
                     mediaMenu();
+                    break;
                 }
                 input.nextLine();
                 Connection connection = Database.connect();
                 String query = "SELECT * FROM Media WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setInt(1, id);
+                    statement.setInt(1, mediaID);
                     ResultSet result = statement.executeQuery();
                     if (result.next()) {
                         if (result.getString("type").equals("song")) {
@@ -257,21 +253,23 @@ public class User {
         switch (command) {
             case "play":
                 System.out.print("║ [↪] ID ⇒ ");
+                int albumID = 0;
                 try {
-                    int id = input.nextInt();
+                    albumID = input.nextInt();
                 } catch (InputMismatchException e) {
                     System.out.println("║ [!] INVALID ID");
                     albumMenu();
+                    break;
                 }
                 input.nextLine();
                 connection = Database.connect();
                 query = "SELECT * FROM Album WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setInt(1, id);
+                    statement.setInt(1, albumID);
                     ResultSet result = statement.executeQuery();
                     if (result.next()) {
-                        Album album = new Album(result.getInt("id"), result.getString("name"), result.getInt("author"));
+                        Album album = new Album(result.getInt("id"), result.getString("name"), result.getString("author"));
                         album.play();
                     } else {
                         System.out.println("║ [!] ALBUM NOT FOUND");
@@ -295,85 +293,48 @@ public class User {
 
     // MENÚ DE LISTAS DE REPRODUCCIÓN
     public void playlistMenu() {
+        Playlist playlist = new Playlist("║ PLAYLIST DE " + this.username.toUpperCase(), this.id);
         Scanner input = new Scanner(System.in);
-        Playlist.list(this.id);
-        System.out.println("║ PLAYLIST");
-        System.out.println("╠═ [~] CREATE");
-        System.out.println("╠═ [~] DELETE");
-        System.out.println("╠═ [~] VIEW");
+        playlist.listMedia();
+        System.out.println("╠═ [~] PLAY");
+        System.out.println("╠═ [~] ADD");
+        System.out.println("╠═ [~] REMOVE");
         System.out.println("╠═ [~] BACK");
         System.out.print("║ [#] ⇒ ");
         String command = input.nextLine().toLowerCase();
         switch (command) {
-            case "create":
-                System.out.print("║ [↪] NAME ⇒ ");
-                String name = input.nextLine();
-                Connection connection = Database.connect();
-                String query = "INSERT INTO Playlists (name, userID) VALUES (?, ?)";
-                try {
-                    PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setString(1, name);
-                    statement.setInt(2, this.id);
-                    statement.executeUpdate();
-                    Database.close(connection);
-                    playlistMenu();
-                } catch (SQLException e) {
-                    System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
-                    Database.close(connection);
-                    playlistMenu();
-                }
+            case "play":
+                playlist.play();
+                playlistMenu();
                 break;
-            case "delete":
-                System.out.print("║ [↪] ID ⇒ ");
+            case "add":
+                Media.list();
+                System.out.print("║ [↪] MEDIA ID ⇒ ");
+                int mediaID = 0;
                 try {
-                    int id = input.nextInt();
+                    mediaID = input.nextInt();
                 } catch (InputMismatchException e) {
                     System.out.println("║ [!] INVALID ID");
                     playlistMenu();
+                    break;
                 }
                 input.nextLine();
-                connection = Database.connect();
-                query = "DELETE FROM Playlists WHERE id = ?";
-                try {
-                    PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setInt(1, id);
-                    statement.executeUpdate();
-                    Database.close(connection);
-                    playlistMenu();
-                } catch (SQLException e) {
-                    System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
-                    Database.close(connection);
-                    playlistMenu();
-                }
+                playlist.add(mediaID);
+                playlistMenu();
                 break;
-            case "view":
-                System.out.print("║ [↪] ID ⇒ ");
+            case "remove":
+                playlist.listMedia();
+                System.out.print("║ [↪] MEDIA ID ⇒ ");
+                mediaID = 0;
                 try {
-                    int id = input.nextInt();
+                    mediaID = input.nextInt();
                 } catch (InputMismatchException e) {
                     System.out.println("║ [!] INVALID ID");
                     playlistMenu();
+                    break;
                 }
                 input.nextLine();
-                connection = Database.connect();
-                query = "SELECT * FROM Playlists WHERE id = ? AND userID = ?";
-                try {
-                    PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setInt(1, id);
-                    statement.setInt(2, this.id);
-                    ResultSet result = statement.executeQuery();
-                    if (result.next()) {
-                        Playlist playlist = new Playlist(result.getString("name"), result.getInt("userID"));
-                        Database.close(connection);
-                        playlist.view();
-                    } else {
-                        System.out.println("║ [!] PLAYLIST NOT FOUND");
-                        Database.close(connection);
-                    }
-                } catch (SQLException e) {
-                    System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
-                    Database.close(connection);
-                }
+                playlist.remove(mediaID);
                 playlistMenu();
                 break;
             case "back":

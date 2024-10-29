@@ -25,18 +25,19 @@ public class Host extends Artist {
         switch (command) {
             case "play":
                 System.out.print("║ [↪] ID ⇒ ");
+                int mediaID = 0;
                 try {
-                    int id = input.nextInt();
+                    mediaID = input.nextInt();
                 } catch (InputMismatchException e) {
                     System.out.println("║ [!] INVALID ID");
-                    Database.close(connection);
                     mediaMenu();
+                    break;
                 }
                 input.nextLine();
                 String query = "SELECT * FROM Media WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setInt(1, id);
+                    statement.setInt(1, mediaID);
                     ResultSet result = statement.executeQuery();
                     if (result.next()) {
                         Podcast podcast = new Podcast(result.getString("path"), result.getString("name"), result.getString("author"));
@@ -76,18 +77,19 @@ public class Host extends Artist {
                 break;
             case "delete":
                 System.out.print("║ [↪] ID ⇒ ");
+                mediaID = 0;
                 try {
-                    int id = input.nextInt();
+                    mediaID = input.nextInt();
                 } catch (InputMismatchException e) {
                     System.out.println("║ [!] INVALID ID");
-                    Database.close(connection);
                     mediaMenu();
+                    break;
                 }
                 input.nextLine();
                 query = "SELECT * FROM Media WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setInt(1, id);
+                    statement.setInt(1, mediaID);
                     ResultSet result = statement.executeQuery();
                     if (result.next()) {
                         query = "DELETE FROM Media WHERE id = ?";
@@ -112,18 +114,19 @@ public class Host extends Artist {
                 break;
             case "edit":
                 System.out.print("║ [↪] ID ⇒ ");
+                mediaID = 0;
                 try {
-                    int id = input.nextInt();
+                    mediaID = input.nextInt();
                 } catch (InputMismatchException e) {
                     System.out.println("║ [!] INVALID ID");
-                    Database.close(connection);
                     mediaMenu();
+                    break;
                 }
                 input.nextLine();
                 query = "SELECT * FROM Media WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setInt(1, id);
+                    statement.setInt(1, mediaID);
                     ResultSet result = statement.executeQuery();
                     if (result.next()) {
                         System.out.print("║ [↪] PODCAST NAME ⇒ ");
@@ -133,7 +136,7 @@ public class Host extends Artist {
                             statement = connection.prepareStatement(query);
                             statement.setString(1, name);
                             statement.setString(2, this.username);
-                            statement.setInt(3, id);
+                            statement.setInt(3, mediaID);
                             statement.executeUpdate();
                             System.out.println("║ [✓] PODCAST UPDATED");
                             Database.close(connection);

@@ -26,18 +26,19 @@ public class Musician extends Artist {
         switch (command) {
             case "play":
                 System.out.print("║ [#] ID ⇒ ");
+                int mediaID = 0;
                 try {
-                    int id = input.nextInt();
+                    mediaID = input.nextInt();
                 } catch (InputMismatchException e) {
                     System.out.println("║ [!] INVALID ID");
-                    Database.close(connection);
                     mediaMenu();
+                    break;
                 }
                 input.nextLine();
                 String query = "SELECT * FROM Media WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setInt(1, id);
+                    statement.setInt(1, mediaID);
                     ResultSet result = statement.executeQuery();
                     if (result.next()) {
                         Song song = new Song(result.getString("path"), result.getString("name"), result.getString("author"));
@@ -87,24 +88,25 @@ public class Musician extends Artist {
                 break;
             case "delete":
                 System.out.print("║ [#] ID ⇒ ");
+                mediaID = 0;
                 try {
-                    int id = input.nextInt();
+                    mediaID = input.nextInt();
                 } catch (InputMismatchException e) {
                     System.out.println("║ [!] INVALID ID");
-                    Database.close(connection);
                     mediaMenu();
+                    break;
                 }
                 input.nextLine();
                 query = "SELECT * FROM Media WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setInt(1, id);
+                    statement.setInt(1, mediaID);
                     ResultSet result = statement.executeQuery();
                     if (result.next()) {
                         query = "DELETE FROM Media WHERE id = ?";
                         try {
                             statement = connection.prepareStatement(query);
-                            statement.setInt(1, id);
+                            statement.setInt(1, mediaID);
                             statement.executeUpdate();
                             System.out.println("║ [✓] SONG DELETED");
                             Database.close(connection);
@@ -126,18 +128,19 @@ public class Musician extends Artist {
                 break;
             case "edit":
                 System.out.print("║ [#] ID ⇒ ");
+                mediaID = 0;
                 try {
-                    int id = input.nextInt();
+                    mediaID = input.nextInt();
                 } catch (InputMismatchException e) {
                     System.out.println("║ [!] INVALID ID");
-                    Database.close(connection);
                     mediaMenu();
+                    break;
                 }
                 input.nextLine();
                 query = "SELECT * FROM Media WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setInt(1, id);
+                    statement.setInt(1, mediaID);
                     ResultSet result = statement.executeQuery();
                     if (result.next()) {
                         System.out.print("║ [↪] SONG NAME ⇒ ");
@@ -200,34 +203,34 @@ public class Musician extends Artist {
         String command = input.nextLine().toLowerCase();
         switch (command) {
             case "play":
-                System.out.print("║ [#] ID ⇒ ");
+                System.out.print("║ [↪] ID ⇒ ");
+                int albumID = 0;
                 try {
-                    int id = input.nextInt();
+                    albumID = input.nextInt();
                 } catch (InputMismatchException e) {
                     System.out.println("║ [!] INVALID ID");
-                    Database.close(connection);
                     albumMenu();
+                    break;
                 }
                 input.nextLine();
+                connection = Database.connect();
                 String query = "SELECT * FROM Album WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setInt(1, id);
+                    statement.setInt(1, albumID);
                     ResultSet result = statement.executeQuery();
                     if (result.next()) {
-                        Album album = new Album(result.getInt("id"), result.getString("name"), result.getInt("author"));
+                        Album album = new Album(result.getInt("id"), result.getString("name"), result.getString("author"));
                         album.play();
-                        Database.close(connection);
                     } else {
                         System.out.println("║ [!] ALBUM NOT FOUND");
-                        Database.close(connection);
                     }
-                    albumMenu();
+                    Database.close(connection);
                 } catch (SQLException e) {
                     System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
                     Database.close(connection);
-                    albumMenu();
                 }
+                albumMenu();
                 break;
             case "create":
                 System.out.print("║ [↪] ALBUM NAME ⇒ ");
@@ -249,24 +252,25 @@ public class Musician extends Artist {
                 break;
             case "delete":
                 System.out.print("║ [#] ID ⇒ ");
+                albumID = 0;
                 try {
-                    int id = input.nextInt();
+                    albumID = input.nextInt();
                 } catch (InputMismatchException e) {
                     System.out.println("║ [!] INVALID ID");
-                    Database.close(connection);
                     albumMenu();
+                    break;
                 }
                 input.nextLine();
                 query = "SELECT * FROM Album WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setInt(1, id);
+                    statement.setInt(1, albumID);
                     ResultSet result = statement.executeQuery();
                     if (result.next()) {
                         query = "DELETE FROM Album WHERE id = ?";
                         try {
                             statement = connection.prepareStatement(query);
-                            statement.setInt(1, id);
+                            statement.setInt(1, albumID);
                             statement.executeUpdate();
                             System.out.println("║ [✓] ALBUM DELETED");
                             Database.close(connection);
@@ -288,18 +292,19 @@ public class Musician extends Artist {
                 break;
             case "edit":
                 System.out.print("║ [#] ID ⇒ ");
+                albumID = 0;
                 try {
-                    int id = input.nextInt();
+                    albumID = input.nextInt();
                 } catch (InputMismatchException e) {
                     System.out.println("║ [!] INVALID ID");
-                    Database.close(connection);
                     albumMenu();
+                    break;
                 }
                 input.nextLine();
                 query = "SELECT * FROM Album WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setInt(1, id);
+                    statement.setInt(1, albumID);
                     ResultSet result = statement.executeQuery();
                     if (result.next()) {
                         System.out.print("║ [↪] ALBUM NAME ⇒ ");
@@ -308,7 +313,7 @@ public class Musician extends Artist {
                         try {
                             statement = connection.prepareStatement(query);
                             statement.setString(1, name);
-                            statement.setInt(2, id);
+                            statement.setInt(2, albumID);
                             statement.executeUpdate();
                             System.out.println("║ [✓] ALBUM UPDATED");
                             Database.close(connection);

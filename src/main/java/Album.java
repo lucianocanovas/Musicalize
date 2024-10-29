@@ -1,13 +1,12 @@
 import java.sql.*;
-import java.util.Scanner;
 
 public class Album {
 
     private int id;
     private String name;
-    private int author;
+    private String author;
 
-    public Album(int id, String name, int author) {
+    public Album(int id, String name, String author) {
         this.id = id;
         this.name = name;
         this.author = author;
@@ -22,8 +21,8 @@ public class Album {
             statement.setString(1, author);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
-                Album album = new Album(result.getInt("id"), result.getString("name"), result.getInt("author"));
-                System.out.println("║ ["+ album.id +"] " + album.name);
+                Album album = new Album(result.getInt("id"), result.getString("name"), result.getString("author"));
+                System.out.println("║ ["+ album.id +"] " + album.name + " - " + album.author);
                 query = "SELECT * FROM Media WHERE albumID = ?";
                 try {
                     statement = connection.prepareStatement(query);
@@ -44,14 +43,13 @@ public class Album {
 
     // METODO PARA REPRODUCIR UN ALBUM
     public void play () {
-        Scanner input = new Scanner(System.in);
         Connection connection = Database.connect();
         String query = "SELECT * FROM Media WHERE albumID = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, this.id);
             ResultSet result = statement.executeQuery();
-            System.out.println("║ PLAYING ALBUM: " + this.name + " BY " + this.author);
+            System.out.println("║ PLAYING ALBUM: " + this.name + " - " + this.author);
             while (result.next()) {
                 System.out.println("║ [~] PLAYING: " + result.getString("name"));
                 Media media = new Media(result.getString("path"));
