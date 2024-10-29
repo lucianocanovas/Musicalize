@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Host extends Artist {
@@ -23,15 +24,22 @@ public class Host extends Artist {
         String command = input.nextLine().toLowerCase();
         switch (command) {
             case "play":
-                System.out.print("║ [#] ID ⇒ ");
-                int id = input.nextInt();
+                System.out.print("║ [↪] ID ⇒ ");
+                try {
+                    int id = input.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("║ [!] INVALID ID");
+                    Database.close(connection);
+                    mediaMenu();
+                }
+                input.nextLine();
                 String query = "SELECT * FROM Media WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
                     statement.setInt(1, id);
                     ResultSet result = statement.executeQuery();
                     if (result.next()) {
-                        Podcast podcast = new Podcast(result.getString("path"), result.getString("name"), result.getString("host"));
+                        Podcast podcast = new Podcast(result.getString("path"), result.getString("name"), result.getString("author"));
                         podcast.play();
                         mediaMenu();
                     } else {
@@ -67,8 +75,15 @@ public class Host extends Artist {
                 }
                 break;
             case "delete":
-                System.out.print("║ [#] ID ⇒ ");
-                id = input.nextInt();
+                System.out.print("║ [↪] ID ⇒ ");
+                try {
+                    int id = input.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("║ [!] INVALID ID");
+                    Database.close(connection);
+                    mediaMenu();
+                }
+                input.nextLine();
                 query = "SELECT * FROM Media WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
@@ -96,8 +111,15 @@ public class Host extends Artist {
                 }
                 break;
             case "edit":
-                System.out.print("║ [#] ID ⇒ ");
-                id = input.nextInt();
+                System.out.print("║ [↪] ID ⇒ ");
+                try {
+                    int id = input.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("║ [!] INVALID ID");
+                    Database.close(connection);
+                    mediaMenu();
+                }
+                input.nextLine();
                 query = "SELECT * FROM Media WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);

@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Musician extends Artist {
@@ -25,7 +26,14 @@ public class Musician extends Artist {
         switch (command) {
             case "play":
                 System.out.print("║ [#] ID ⇒ ");
-                id = input.nextInt();
+                try {
+                    int id = input.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("║ [!] INVALID ID");
+                    Database.close(connection);
+                    mediaMenu();
+                }
+                input.nextLine();
                 String query = "SELECT * FROM Media WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
@@ -79,7 +87,13 @@ public class Musician extends Artist {
                 break;
             case "delete":
                 System.out.print("║ [#] ID ⇒ ");
-                id = input.nextInt();
+                try {
+                    int id = input.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("║ [!] INVALID ID");
+                    Database.close(connection);
+                    mediaMenu();
+                }
                 input.nextLine();
                 query = "SELECT * FROM Media WHERE id = ?";
                 try {
@@ -112,7 +126,14 @@ public class Musician extends Artist {
                 break;
             case "edit":
                 System.out.print("║ [#] ID ⇒ ");
-                id = input.nextInt();
+                try {
+                    int id = input.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("║ [!] INVALID ID");
+                    Database.close(connection);
+                    mediaMenu();
+                }
+                input.nextLine();
                 query = "SELECT * FROM Media WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
@@ -135,13 +156,15 @@ public class Musician extends Artist {
                             statement.setString(3, "src/main/resources/songs/"+path);
                             statement.executeUpdate();
                             System.out.println("║ [✓] SONG UPDATED");
+                            Database.close(connection);
                         } catch (SQLException e) {
                             System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
+                            Database.close(connection);
                         }
                     } else {
                         System.out.println("║ [!] YOU CAN ONLY EDIT YOUR OWN SONGS");
+                        Database.close(connection);
                     }
-                    Database.close(connection);
                     mediaMenu();
                 } catch (SQLException e) {
                     System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
@@ -178,7 +201,14 @@ public class Musician extends Artist {
         switch (command) {
             case "play":
                 System.out.print("║ [#] ID ⇒ ");
-                int id = input.nextInt();
+                try {
+                    int id = input.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("║ [!] INVALID ID");
+                    Database.close(connection);
+                    albumMenu();
+                }
+                input.nextLine();
                 String query = "SELECT * FROM Album WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
@@ -213,12 +243,20 @@ public class Musician extends Artist {
                     albumMenu();
                 } catch (SQLException e) {
                     System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
+                    Database.close(connection);
                     albumMenu();
                 }
                 break;
             case "delete":
                 System.out.print("║ [#] ID ⇒ ");
-                id = input.nextInt();
+                try {
+                    int id = input.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("║ [!] INVALID ID");
+                    Database.close(connection);
+                    albumMenu();
+                }
+                input.nextLine();
                 query = "SELECT * FROM Album WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
@@ -234,20 +272,30 @@ public class Musician extends Artist {
                             Database.close(connection);
                         } catch (SQLException e) {
                             System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
+                            Database.close(connection);
                         }
                         albumMenu();
                     } else {
                         System.out.println("║ [!] YOU CAN ONLY DELETE YOUR OWN ALBUMS");
+                        Database.close(connection);
                         albumMenu();
                     }
                 } catch (SQLException e) {
                     System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
+                    Database.close(connection);
                     albumMenu();
                 }
                 break;
             case "edit":
                 System.out.print("║ [#] ID ⇒ ");
-                id = input.nextInt();
+                try {
+                    int id = input.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("║ [!] INVALID ID");
+                    Database.close(connection);
+                    albumMenu();
+                }
+                input.nextLine();
                 query = "SELECT * FROM Album WHERE id = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
@@ -266,13 +314,16 @@ public class Musician extends Artist {
                             Database.close(connection);
                         } catch (SQLException e) {
                             System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
+                            Database.close(connection);
                         }
                     } else {
                         System.out.println("║ [!] YOU CAN ONLY EDIT YOUR OWN ALBUMS");
+                        Database.close(connection);
                     }
                     albumMenu();
                 } catch (SQLException e) {
                     System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
+                    Database.close(connection);
                     albumMenu();
                 }
                 break;

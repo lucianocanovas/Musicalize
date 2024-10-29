@@ -1,5 +1,5 @@
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class User {
@@ -63,20 +63,17 @@ public class User {
         Scanner input = new Scanner(System.in);
         System.out.print("║ [↪] USERNAME ⇒ ");
         String username = input.nextLine();
-        System.out.print("║ [↪] PASSWORD ⇒ ");
-        String password = input.nextLine();
-        System.out.print("║ [↪] CONFIRM PASSWORD ⇒ ");
-        String confirm = input.nextLine();
-        System.out.println("║ [◎] ACCOUNT TYPES: USER | MUSICIAN | HOST");
-        System.out.print("║ [↪] ACCOUNT TYPE ⇒ ");
-        String type = input.nextLine();
-        if (!password.equals(confirm)) {
-            System.out.println("║ [!] PASSWORDS DO NOT MATCH");
+        String password;
+        String confirm;
+        do {
             System.out.print("║ [↪] PASSWORD ⇒ ");
             password = input.nextLine();
             System.out.print("║ [↪] CONFIRM PASSWORD ⇒ ");
             confirm = input.nextLine();
-        }
+        } while (!password.equals(confirm) && password.length() < 1);
+        System.out.println("║ [◎] ACCOUNT TYPES: USER | MUSICIAN | HOST");
+        System.out.print("║ [↪] ACCOUNT TYPE ⇒ ");
+        String type = input.nextLine();
         while (!type.equals("user") && !type.equals("musician") && !type.equals("host")) {
             System.out.println("║ [!] INVALID ACCOUNT TYPE");
             System.out.println("║ [◎] ACCOUNT TYPES: USER | ARTIST | MUSICIAN | HOST");
@@ -192,7 +189,13 @@ public class User {
         switch (command) {
             case "play":
                 System.out.print("║ [↪] ID ⇒ ");
-                int id = input.nextInt();
+                try {
+                    int id = input.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("║ [!] INVALID ID");
+                    mediaMenu();
+                }
+                input.nextLine();
                 Connection connection = Database.connect();
                 String query = "SELECT * FROM Media WHERE id = ?";
                 try {
@@ -253,7 +256,13 @@ public class User {
         switch (command) {
             case "play":
                 System.out.print("║ [↪] ID ⇒ ");
-                int id = input.nextInt();
+                try {
+                    int id = input.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("║ [!] INVALID ID");
+                    albumMenu();
+                }
+                input.nextLine();
                 connection = Database.connect();
                 query = "SELECT * FROM Album WHERE id = ?";
                 try {
@@ -315,7 +324,13 @@ public class User {
                 break;
             case "delete":
                 System.out.print("║ [↪] ID ⇒ ");
-                int id = input.nextInt();
+                try {
+                    int id = input.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("║ [!] INVALID ID");
+                    playlistMenu();
+                }
+                input.nextLine();
                 connection = Database.connect();
                 query = "DELETE FROM Playlists WHERE id = ?";
                 try {
@@ -332,12 +347,19 @@ public class User {
                 break;
             case "view":
                 System.out.print("║ [↪] ID ⇒ ");
-                id = input.nextInt();
+                try {
+                    int id = input.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("║ [!] INVALID ID");
+                    playlistMenu();
+                }
+                input.nextLine();
                 connection = Database.connect();
-                query = "SELECT * FROM Playlists WHERE id = ?";
+                query = "SELECT * FROM Playlists WHERE id = ? AND userID = ?";
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
                     statement.setInt(1, id);
+                    statement.setInt(2, this.id);
                     ResultSet result = statement.executeQuery();
                     if (result.next()) {
                         Playlist playlist = new Playlist(result.getString("name"), result.getInt("userID"));
@@ -349,6 +371,7 @@ public class User {
                     }
                 } catch (SQLException e) {
                     System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
+                    Database.close(connection);
                 }
                 playlistMenu();
                 break;
