@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class Podcast extends Media {
+public class Podcast extends Media implements Playable {
 
     private String title;
     private String host;

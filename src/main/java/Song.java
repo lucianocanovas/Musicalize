@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class Song extends Media {
+public class Song extends Media implements Playable {
 
     private String name;
     private String artist;

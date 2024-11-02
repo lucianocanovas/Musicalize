@@ -2,7 +2,7 @@ import java.sql.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Host extends Artist {
+public class Host extends Artist implements Menu {
 
     public Host(int id, String username, String password) {
         super(id, username, password);

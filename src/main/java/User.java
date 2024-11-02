@@ -2,7 +2,7 @@ import java.sql.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class User {
+public class User implements Menu {
 
     protected int id;
     protected String username;
@@ -92,6 +92,7 @@ public class User {
     }
 
     // MENÚ PRINCIPAL
+    @Override
     public void mainMenu() {
         Scanner input = new Scanner(System.in);
         System.out.println("║ MAIN MENU");
@@ -126,6 +127,7 @@ public class User {
     }
 
     // MENÚ DE PERFIL
+    @Override
     public void profileMenu() {
         Scanner input = new Scanner(System.in);
         Connection connection = Database.connect();
@@ -173,6 +175,7 @@ public class User {
     }
 
     // MENÚ DE MEDIOS
+    @Override
     public void mediaMenu() {
         Scanner input = new Scanner(System.in);
         Media.list();
@@ -231,6 +234,7 @@ public class User {
     }
 
     // MENÚ DE ÁLBUMES
+    @Override
     public void albumMenu() {
         Scanner input = new Scanner(System.in);
         Connection connection = Database.connect();
@@ -292,6 +296,7 @@ public class User {
     }
 
     // MENÚ DE LISTAS DE REPRODUCCIÓN
+    @Override
     public void playlistMenu() {
         Playlist playlist = new Playlist("PLAYLIST DE " + this.username.toUpperCase(), this.id);
         Scanner input = new Scanner(System.in);

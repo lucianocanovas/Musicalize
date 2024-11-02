@@ -35,6 +35,7 @@ public class Playlist {
             Database.close(connection);
         } catch (SQLException e) {
             System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
+            Database.close(connection);
         }
     }
 
@@ -74,30 +75,63 @@ public class Playlist {
     // METODO PARA AGREGAR UNA CANCION O PODCAST A UNA PLAYLIST
     public void add(int mediaID) {
         Connection connection = Database.connect();
-        String query = "INSERT INTO PlaylistMedia (playlistID, mediaID) VALUES (?, ?)";
+        String query = "SELECT * FROM Media WHERE id = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, this.user);
-            statement.setInt(2, mediaID);
-            statement.executeUpdate();
+            statement.setInt(1, mediaID);
+            ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                query = "INSERT INTO PlaylistMedia (playlistID, mediaID) VALUES (?, ?)";
+                try {
+                    statement = connection.prepareStatement(query);
+                    statement.setInt(1, this.user);
+                    statement.setInt(2, mediaID);
+                    statement.executeUpdate();
+                    Database.close(connection);
+                } catch (SQLException e) {
+                    System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
+                    Database.close(connection);
+                }
+            } else {
+                System.out.println("║ [!] MEDIA NOT FOUND");
+                Database.close(connection);
+            }
             Database.close(connection);
         } catch (SQLException e) {
             System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
+            Database.close(connection);
         }
     }
 
     // METODO PARA ELIMINAR UNA CANCION O PODCAST DE UNA PLAYLIST
     public void remove(int mediaID) {
         Connection connection = Database.connect();
-        String query = "DELETE FROM PlaylistMedia WHERE playlistID = ? AND mediaID = ?";
+        String query = "SELECT * FROM PlaylistMedia WHERE playlistID = ? AND mediaID = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, this.user);
             statement.setInt(2, mediaID);
-            statement.executeUpdate();
+            ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                query = "DELETE FROM PlaylistMedia WHERE playlistID = ? AND mediaID = ?";
+                try {
+                    statement = connection.prepareStatement(query);
+                    statement.setInt(1, this.user);
+                    statement.setInt(2, mediaID);
+                    statement.executeUpdate();
+                    Database.close(connection);
+                } catch (SQLException e) {
+                    System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
+                    Database.close(connection);
+                }
+            } else {
+                System.out.println("║ [!] MEDIA NOT FOUND");
+                Database.close(connection);
+            }
             Database.close(connection);
         } catch (SQLException e) {
             System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
+            Database.close(connection);
         }
     }
 

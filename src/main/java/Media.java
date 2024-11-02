@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.Scanner;
 
-public class Media {
+public class Media implements Playable {
 
     protected String path;
     protected AdvancedPlayer player;
@@ -37,10 +37,12 @@ public class Media {
             Database.close(connection);
         } catch (SQLException e) {
             System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
+            Database.close(connection);
         }
     }
 
     // METODO PARA REPRODUCIR MEDIOS
+    @Override
     public void play() {
         Scanner input = new Scanner(System.in);
         mediaThread = new Thread(() -> {
@@ -61,6 +63,7 @@ public class Media {
     }
 
     // METODO PARA DETENER REPRODUCCION
+    @Override
     public void stop() {
         if (player != null) {
             player.close();

@@ -2,7 +2,7 @@ import java.sql.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Musician extends Artist {
+public class Musician extends Artist implements Menu {
 
     public Musician(int id, String username, String password) {
         super(id, username, password);
