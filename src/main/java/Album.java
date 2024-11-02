@@ -6,11 +6,13 @@ public class Album {
     private int id;
     private String name;
     private String author;
+    private ArrayList<Media> list;
 
     public Album(int id, String name, String author) {
         this.id = id;
         this.name = name;
         this.author = author;
+        this.list = new ArrayList<Media>();
     }
 
     // METODO PARA LISTAR ALBUMES
@@ -52,11 +54,24 @@ public class Album {
             ResultSet result = statement.executeQuery();
             System.out.println("║ PLAYING ALBUM: " + this.name + " - " + this.author);
             while (result.next()) {
-                System.out.println("║ [~] PLAYING: " + result.getString("name"));
-                Media media = new Media(result.getString("path"));
-                media.play();
+                if (result.getString("type").equals("song")) {
+                    Song song = new Song(result.getString("path"), result.getString("name"), result.getString("author"));
+                    this.list.add(song);
+                } else {
+                    Podcast podcast = new Podcast(result.getString("path"), result.getString("name"), result.getString("author"));
+                    this.list.add(podcast);
+                }
             }
             Database.close(connection);
+            for (Media media : this.list) {
+                if (media instanceof Song) {
+                    Song song = (Song) media;
+                    song.play();
+                } else {
+                    Podcast podcast = (Podcast) media;
+                    podcast.play();
+                }
+            }
         } catch (SQLException e) {
             System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
         }

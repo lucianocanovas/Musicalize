@@ -60,11 +60,32 @@ public class Musician extends Artist implements Menu {
             case "upload":
                 System.out.print("║ [↪] SONG NAME ⇒ ");
                 String name = input.nextLine();
-                System.out.println("║ [ ] NO ALBUM ");
                 Album.list(this.username);
                 System.out.print("║ [↪] ALBUM ID ⇒ ");
-                int album = input.nextInt();
+                int album = 0;
+                try {
+                    album = input.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("║ [!] INVALID ID");
+                    mediaMenu();
+                    break;
+                }
                 input.nextLine();
+                try {
+                    query = "SELECT * FROM Album WHERE id = ?";
+                    PreparedStatement statement = connection.prepareStatement(query);
+                    statement.setInt(1, album);
+                    ResultSet result = statement.executeQuery();
+                    if (!result.next()) {
+                        System.out.println("║ [!] ALBUM NOT FOUND");
+                        Database.close(connection);
+                        mediaMenu();
+                    }
+                } catch (SQLException e) {
+                    System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
+                    Database.close(connection);
+                    mediaMenu();
+                }
                 System.out.print("║ [#] FILE NAME ⇒ ");
                 String path = input.nextLine();
                 query = "INSERT INTO Media (name, author, type, albumID, path) VALUES (?, ?, ?, ?, ?)";
@@ -273,6 +294,14 @@ public class Musician extends Artist implements Menu {
                             statement.setInt(1, albumID);
                             statement.executeUpdate();
                             System.out.println("║ [✓] ALBUM DELETED");
+                        } catch (SQLException e) {
+                            System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());
+                        }
+                        query = "DELETE FROM Media WHERE albumID = ?";
+                        try {
+                            statement = connection.prepareStatement(query);
+                            statement.setInt(1, albumID);
+                            statement.executeUpdate();
                             Database.close(connection);
                         } catch (SQLException e) {
                             System.out.println("║ [!] DATABASE ERROR: " + e.getMessage());

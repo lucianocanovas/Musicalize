@@ -35,4 +35,5 @@ public class Podcast extends Media implements Playable {
         input.nextLine();
         stop();
     }
+
 }
